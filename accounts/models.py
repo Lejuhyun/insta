@@ -13,4 +13,4 @@ class User(AbstractUser):
     # post_set(MMF) 장고가 자동으로 만들어주려함 
     # 역참조 중복 발생 = > 충돌이 발생함
     # post_set => like_posts (MMF)
-    # comment_set 장고가 자동으로 만들어줌 
+    followings = models.ManyToManyField('self', related_name='followers', symmetrical = False)

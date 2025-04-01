@@ -43,6 +43,7 @@ def comment_create(request, post_id):
         comment.save()
         return redirect('posts:index')
 
+@login_required
 def like(request, post_id):
     user = request.user
     post =Post.objects.get(id=post_id)
@@ -55,3 +56,14 @@ def like(request, post_id):
         # user.like_posts.add(post)
         post.like_users.add(user) # 좋아요 버튼을 누른 목록에 user를 추가한다
     return redirect('posts:index')
+
+def feed(request):
+    followings = request.user.followings.all()
+    posts = Post.objects.filter(user__in=followings)  # 내가 팔로우하는 사람들이 작성한 게시물들
+    form = CommentForm()
+
+    context = {
+        'posts': posts,
+        'form': form,
+    }
+    return render(request, 'index.html', context)
