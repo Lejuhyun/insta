@@ -136,3 +136,17 @@ def like(request, post_id):
         {% endif %}
       </a>
 ```
+
+
+
+# 프로필 기능 만들기
+
+## 1. card.html 수정
+```html
+<a href="{% url 'accounts:profile' post.user.username %}">{{post.user.username}}</a>
+```
+
+## 2. 경로설정
+```python
+post('<username>/', views.profile, name= 'profile'),
+```
