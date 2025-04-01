@@ -10,5 +10,7 @@ class User(AbstractUser):
         upload_to='profile'
     )
     # post_set(FK) 장고가 자동으로 만들어줌
-    # post_set(MMF) 장고가 자동으로 만들어주려함 => 충돌이 발생함
+    # post_set(MMF) 장고가 자동으로 만들어주려함 
+    # 역참조 중복 발생 = > 충돌이 발생함
+    # post_set => like_posts (MMF)
     # comment_set 장고가 자동으로 만들어줌 

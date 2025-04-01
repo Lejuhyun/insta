@@ -70,3 +70,69 @@ def comment_create(request, post_id):
         comment.save()
         return redirect('posts:index')
 ```
+
+## 6. 댓글 보여주기 (_card.html)
+```html
+      <div class = "mt-2">
+        {% for comment in post.comment_set.all %}
+          <li>{{comment.user}} : {{comment.content}}</li>
+      </div>
+```
+
+
+
+# M:N 기능 구현하기
+
+## 1. (posts=> models.py)
+
+## 2. 좋아요 버튼 만들기
+- card.html에서 body최상단에 하트 만들기
+ ```html
+    <div class="card-body">
+      <a href="{% url 'posts:like' post.id %}">
+        <i class="bi bi-heart"></i>
+      </a>
+ ```
+
+ ## 3. 경로설정
+ ```python
+path('<int:post_id>/like/', views.like, name="like"),
+ ```
+
+ ## 4. like 함수 구현하기
+ ```python
+def like(request, post_id):
+    user = request.user
+    post =Post.objects.get(id=post_id)
+
+    # if post in user.like_posts.all():
+    if user in post.like_users.all(): # 게시물에 좋아요 버튼 누른사람들에 대한 리스트
+        # user.like_posts.remove(post)
+        post.like_users.remove(user) # 좋아요 버튼 누른 목록에 유저를 삭제한다
+    else:
+        # user.like_posts.add(post)
+        post.like_users.add(user) # 좋아요 버튼을 누른 목록에 user를 추가한다
+    return redirect('posts:index')
+ ```
+
+ ## 5. 몇명이 좋아하는지 표시하기(card.html)
+ ```html
+<span>{{post.like_users.all|length}}명이 좋아합니다</span>
+ ```
+
+ ## 6. 하트 색깔 바꾸기
+ ```html
+<a href="{% url 'posts:like' post.id %}" class = "text-reset text-decoration-none">
+ ```
+ - class 바꿈
+
+ ## 7. 좋아요버튼을 누르면 => heart-fill 아니면 =>heary
+```html
+      <a href="{% url 'posts:like' post.id %}" class = "text-reset text-decoration-none">
+        {% if user in post.like_users.all%}
+          <i class="bi bi-heart-fill" style="color: red;"></i>
+        {% else %}
+        `<i class="bi bi-heart"></i>
+        {% endif %}
+      </a>
+```

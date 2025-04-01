@@ -43,3 +43,15 @@ def comment_create(request, post_id):
         comment.save()
         return redirect('posts:index')
 
+def like(request, post_id):
+    user = request.user
+    post =Post.objects.get(id=post_id)
+
+    # if post in user.like_posts.all():
+    if user in post.like_users.all(): # 게시물에 좋아요 버튼 누른사람들에 대한 리스트
+        # user.like_posts.remove(post)
+        post.like_users.remove(user) # 좋아요 버튼 누른 목록에 유저를 삭제한다
+    else:
+        # user.like_posts.add(post)
+        post.like_users.add(user) # 좋아요 버튼을 누른 목록에 user를 추가한다
+    return redirect('posts:index')
