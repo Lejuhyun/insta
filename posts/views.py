@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
     posts = Post.objects.all()
-
+    form = CommentForm()
     context ={
         'posts': posts,
+        'form': form,
     }
 
     return render(request, 'index.html', context)
@@ -30,3 +31,15 @@ def create(request):
         'form': form,
     }
     return render(request, 'create.html', context)
+
+@login_required
+def comment_create(request, post_id):
+    form = CommentForm(request.POST)
+
+    if form.is_valid():
+        comment = form.save(commit=False) # 임시저장만 해줌
+        comment.user = request.user # 댓글 입력한 사람
+        comment.post_id = post_id 
+        comment.save()
+        return redirect('posts:index')
+

@@ -9,3 +9,6 @@ class User(AbstractUser):
         crop=['middle', 'center'],
         upload_to='profile'
     )
+    # post_set(FK) 장고가 자동으로 만들어줌
+    # post_set(MMF) 장고가 자동으로 만들어주려함 => 충돌이 발생함
+    # comment_set 장고가 자동으로 만들어줌 
