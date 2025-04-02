@@ -150,3 +150,37 @@ def like(request, post_id):
 ```python
 post('<username>/', views.profile, name= 'profile'),
 ```
+
+## 3. 함수설정
+```python
+from .models import User
+def profile(request, username):
+    user_profile = User.objects.get(username = username)
+    context = {
+        'user_profile': user_profile,
+    }
+    return render(request, 'profile.html', context)
+```
+
+## 4. profile.html 설정
+```html
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-3">
+            image
+        </div>
+        <div class="col-9">
+            follow
+        </div>
+    </div>
+    <div class="row">
+        {% for post in user_profile.post_set.all %}
+        <div class="col-4">
+            <img src="{{post.image.url}}" alt="" class = "img-fluid">
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+```
